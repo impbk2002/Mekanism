@@ -794,6 +794,19 @@ public class BlockMachine extends BlockContainer implements ISpecialBounds, IBlo
 			double motionY = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
 			double motionZ = (world.rand.nextFloat() * motion) + (1.0F - motion) * 0.5D;
 
+			if(tileEntity instanceof TileEntityContainerBlock) {
+				TileEntityContainerBlock Container = (TileEntityContainerBlock) tileEntity;
+				if(Container.getStackInSlot(0) != null && (Container instanceof TileEntityPurificationChamber || Container instanceof TileEntityChemicalInjectionChamber)) {
+					EntityItem entity = new EntityItem(world, x + motionX, y + motionY, z + motionZ, Container.getStackInSlot(0).copy());
+					world.spawnEntityInWorld(entity);
+					Container.setInventorySlotContents(0, null);
+				}else if(Container instanceof TileEntityChemicalDissolutionChamber && Container.getStackInSlot(1) != null) {
+					EntityItem entity = new EntityItem(world, x + motionX, y + motionY, z + motionZ, Container.getStackInSlot(1).copy());
+					world.spawnEntityInWorld(entity);
+					Container.setInventorySlotContents(1, null);
+				}
+			}
+
 			EntityItem entityItem = new EntityItem(world, x + motionX, y + motionY, z + motionZ, getPickBlock(null, world, x, y, z, player));
 
 			world.spawnEntityInWorld(entityItem);
